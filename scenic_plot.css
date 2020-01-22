@@ -1,0 +1,56 @@
+html, body, #wrapper, #map {
+    height: 100%;
+}
+#wrapper {
+    margin-left: 260px;
+}
+#map {
+    float: left;
+    width: 100%;
+}
+.info {
+    padding: 6px 8px;
+    font-size: 20px;
+    font-family: 'Lora', serif;
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    width: 200px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-weight: 700;
+}
+.leaflet-control-layers-base label {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+}
+.leaflet-control-layers-expanded {
+    background: rgba(255,255,255,0.6);
+}
+.legend {
+    text-align: center;
+    line-height: 32px;
+    color: #777;
+    height: 102px;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+.band {
+    float: left;
+    height: 5px;
+    background-color: #c9c9c9;
+}
+.crime {
+    height: 200px;
+    width: 135px;
+    line-height: 29px;
+}

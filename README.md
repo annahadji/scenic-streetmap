@@ -1,2 +1,7 @@
-# scenic-streetmap
-Javascript visualisation of crime rates, scenicness and indices of deprivation across London
+
+
+<p align="center"><img src="plots/scenicness.png" width="500"></p>
+
+<p align="center"><img src="plots/scenic_points.png" width="500"></p>
+
+<p align="center"><img src="plots/mean_counts.png" width="500"></p>
