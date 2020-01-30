@@ -8,6 +8,22 @@ html, body, #wrapper, #map {
     float: left;
     width: 100%;
 }
+#enter-pcode {
+   width: 185px;
+}
+.search-pcode {
+    left: 2%;
+    display: inline-block;
+    float: none;
+}
+.pcode {
+    font-size: 20px;
+    font-family: 'Lora', serif;
+    background: rgba(255,255,255,0.6);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    width: 100px;
+}
 .info {
     padding: 6px 8px;
     font-size: 20px;
@@ -26,7 +42,7 @@ html, body, #wrapper, #map {
 }
 .leaflet-control-layers-base label {
     font-family: 'Lora', serif;
-    font-size: 16px;
+    font-size: 18px;
 }
 .leaflet-control-layers-expanded {
     background: rgba(255,255,255,0.6);

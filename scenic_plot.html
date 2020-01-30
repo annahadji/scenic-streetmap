@@ -12,7 +12,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   </head>
   <body>
-    <div id="map"> </div>
+    <div id="map"></div>
     <script>
       /**
        * Load the csv data containing scenic ratings for particular points across london. 
@@ -20,76 +20,75 @@
        * The data is converted to geojson so we can easily extract the coordinates of points, 
        * and the library d3 is used to help display the (~130000) points
        **/
-      
       var now_showing=0;
       
       d3.csv('mean_scenic_rating_per_locid_30_10_19.csv', function (error, scenic) {
         var geoData = {type: "FeatureCollection", features: reformat(scenic)};
-      
         var leafletMap = L.map('map').setView([51.505, -.09], 13);
         var base = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-         });
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> '+
+            'contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        });
         leafletMap.addLayer(base);
         
         var svg = d3.select(leafletMap.getPanes().overlayPane).append("svg"); // svg appends a d3 layer for rendering svg to the leaflet map
         var g = svg.append("g").attr("class", "leaflet-zoom-hide"); // g keeps SVGs grouped together
-      
-        function projectPoint(x, y) {
+
+        function projectPoint (x, y) {
           var point = leafletMap.latLngToLayerPoint(new L.LatLng(y, x));
           this.stream.point(point.x, point.y);
         }
-      
+
         /**
          * Path and transform take regular coords and turn them into svg coords, and
          * those coords are applied back to the leaflet map layer using the current stream (above)
          **/
-      
+
         var transform = d3.geo.transform({
           point: projectPoint
         });
         var path = d3.geo.path().projection(transform);
-      
-        function redrawSubset(subset) {
+
+        function redrawSubset (subset) {
           path.pointRadius(2);
-      
+
           var bounds = path.bounds({
             type: "FeatureCollection",
             features: subset
           });
           var topLeft = bounds[0];
           var bottomRight = bounds[1];
-      
+
           svg.attr("width", bottomRight[0] - topLeft[0])
             .attr("height", bottomRight[1] - topLeft[1])
             .style("left", topLeft[0] + "px")
             .style("top", topLeft[1] + "px");
           
           g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-      
+
           var points = g.selectAll("path")
-              .data(subset, function(d) {
+              .data(subset, function (d) {
                 return d.geometry.coordinates;
               })
               .enter()
               .append("path")
               .attr("d", path).attr("class", "point")
-              .style("fill", function(d) {return percToColour(d.properties.scenic_rating, 1.5, 6.3)})
+              .style("fill", function (d) {return percToColour(d.properties.scenic_rating, 1.5, 6.3)})
               .style("fillOpacity", .8);
         }
-        
-        function mapmove(e) {
+
+        function mapmove (e) {
           d3.selectAll(".point").remove();
           redrawSubset(geoData.features);
         }
-      
+
         /**
          * Next load data containing values for multiple variables per LSOA, so this info can be
          * displayed as we rollover and click on an LSOA. These layers have far fewer points 
          * (1 per LSOA), and so are implemented purely in leaflet
          **/
-      
-        function highlightFeature(e) {
+
+        function highlightFeature (e) {
           var layer = e.target;
           layer.setStyle({
             weight: 1,
@@ -105,18 +104,18 @@
         }
       
         var lsoaBoundaries;
-        function resetHighlight(e) {
+        function resetHighlight (e) {
           lsoaBoundaries.resetStyle(e.target);
           info.update();
         }
       
-        function displayInfo(e) {
+        function displayInfo (e) {
           var layer = e.target;
           now_showing=layer.feature.properties;
           info.update(layer.feature.properties);
         }
         
-        function onEachFeature(feature, layer) {
+        function onEachFeature (feature, layer) {
           layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
@@ -165,15 +164,15 @@
           });
       
           var d3Layer = L.Class.extend({ // extend leaflet class to toggle on/off d3 layer w/ other leaflet layers
-            initialize: function() {
+            initialize: function () {
               return;
             },
-            onAdd: function() {
+            onAdd: function () {
               leafletMap.on('viewreset', mapmove); // remove points and redraw relevant subset as we move around map
               redrawSubset(geoData.features); // draw initial susbet in starting position
               scenicPointsLegend.addTo(leafletMap);              
             },
-            onRemove: function() {
+            onRemove: function () {
               leafletMap.off('viewreset', mapmove);
               d3.selectAll(".point").remove();
               leafletMap.removeControl(scenicPointsLegend);
@@ -236,7 +235,7 @@
         info.addTo(leafletMap);
       
         var continuousScaleLegend = L.Control.extend({
-          initialize: function(min, max) {
+          initialize: function (min, max) {
            /**
             * @param {Number} min Min value in data (low end of colour scale)
             * @param {Number} max Max value in data (high end of colour scale)
@@ -246,7 +245,7 @@
             return;
           },
           options: {position: 'bottomleft'},
-          onAdd: function(map) {
+          onAdd: function (map) {
             var div = L.DomUtil.create('div', 'info legend');
             div.innerHTML = `Scenicness Rating<br>Min (${this._min}) &emsp;&nbsp; Max (${this._max})`;
             var legend_svg = d3.select(div).append("svg");
@@ -271,19 +270,19 @@
         var scenicLsoaLegend = new continuousScaleLegend(2.1, 4.8);
         
         var crimeLegend = L.control({position: 'bottomleft'});
-      crimeLegend.onAdd = function (map) {
+        crimeLegend.onAdd = function (map) {
           var div = L.DomUtil.create('div', 'info legend crime');
           var grades = [55,25,15,7,2];
-      var label_text = ["> 50","20 - 50","10 - 20","5 - 10","< 5"];
-      var labels = ['Av. Monthly Crimes'];
-      for (var i=0; i<grades.length; i++) {
-      labels.push(
-       '<i style="background:' + getCrimeColour(grades[i]) + '"></i> ' + label_text[i]);
-      }
-      div.innerHTML = labels.join('<br>');
+          var label_text = ["> 50","20 - 50","10 - 20","5 - 10","< 5"];
+          var labels = ['Av. Monthly Crimes'];
+          for (var i=0; i<grades.length; i++) {
+            labels.push(
+              '<i style="background:' + getCrimeColour(grades[i]) + '"></i> ' + label_text[i]);
+          }
+          div.innerHTML = labels.join('<br>');
           return div;
-      };
-      
+        };
+
         leafletMap.on("baselayerchange", function (event) { // display appropriate legend as baselayer changes
           lsoaBoundaries.bringToFront(); // keep lsoa boundary info (health, income scores etc.) at the front
           if (event.name === "Average Crime Count per Month") {
@@ -305,6 +304,32 @@
             }
           }
         });
+
+        function viewPostcode () {
+          var pcode = document.getElementById('enter-pcode').value;
+          var pcode_url_req = "https://api.postcodes.io/postcodes/" + pcode;
+          $.get(pcode_url_req, function (data, status){
+            var long = data["result"]["longitude"];
+            var lat = data["result"]["latitude"];
+            leafletMap.setView([lat, long], 15);
+          }).fail(function (){
+            alert("Please enter a valid postcode. For example, NW1 2DB")
+          });
+        }
+
+        L.Control.textbox = L.Control.extend({
+	  onAdd: function (map) {
+	    var text = L.DomUtil.create('div', 'search-pcode');
+            text.innerHTML = '<input class="pcode" id="enter-pcode" placeholder="Enter postcode...">' +
+              '<button class="pcode" id="search">Search</button>';
+            text.addEventListener('click', viewPostcode);
+            return text;
+	  },
+	});
+	L.control.textbox = function (opts) {
+          return new L.Control.textbox(opts);
+        }
+	L.control.textbox({position: 'topleft'}).addTo(leafletMap);
       });
     </script>
   </body>
