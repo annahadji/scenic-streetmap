@@ -307,14 +307,17 @@
 
         function viewPostcode () {
           var pcode = document.getElementById('enter-pcode').value;
-          var pcode_url_req = "https://api.postcodes.io/postcodes/" + pcode;
-          $.get(pcode_url_req, function (data, status){
-            var long = data["result"]["longitude"];
-            var lat = data["result"]["latitude"];
+          if (pcode != "") {
+            var pcode_url_req = "https://api.postcodes.io/postcodes/" + pcode;
+            $.get(pcode_url_req, function (data, status){
+              var long = data["result"]["longitude"];
+              var lat = data["result"]["latitude"];
             leafletMap.setView([lat, long], 15);
-          }).fail(function (){
-            alert("Please enter a valid postcode. For example, NW1 2DB")
-          });
+            }).fail(function (){
+              document.getElementById('enter-pcode').value = "";
+              alert("Please enter a valid postcode. For example, NW1 2DB");
+            });
+          }
         }
 
         L.Control.textbox = L.Control.extend({
