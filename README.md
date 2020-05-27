@@ -1,6 +1,6 @@
 # Visualising areas of London
 
-This repository contains the source code for a JavaScript visualisation of crime rates, scenicness and indices of deprivation across London. This is the standalone code associated with the visualisation presented [here](https://github.com/wrattler/wrattler-examples/blob/master/resources/scenic-analysis.wrattler), where further quantitative analysis of the data can be found. 
+This repository contains the source code for a JavaScript visualisation of crime rates, scenicness and indices of deprivation across London. This is the standalone code associated with the visualisation presented [here](https://github.com/wrattler/wrattler-examples/blob/master/examples/scenic-analysis.wrattler), where further quantitative analysis of the data can be found. 
 
 It presents the following data sources:
 
